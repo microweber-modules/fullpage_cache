@@ -10,7 +10,7 @@
     }
   ],
   "keywords": [
-    "cache" 
+    "cache warmer" 
   ],
   "type": "microweber-module",
   "target-dir": "fullpage_cache"
