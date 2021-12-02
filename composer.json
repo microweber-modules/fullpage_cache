@@ -1,0 +1,17 @@
+{
+  "name": "microweber-modules/fullpage_cache",
+  "description": "Module to browse all pages and cache them",
+  "license": "MIT",
+  "homepage": "https://github.com/microweber-modules/fullpage_cache",
+  "authors": [
+    {
+      "name": "Bozhidar Slaveykov",
+      "email": "bobi@microweber.com"
+    }
+  ],
+  "keywords": [
+    "cache" 
+  ],
+  "type": "microweber-module",
+  "target-dir": "fullpage_cache"
+}
