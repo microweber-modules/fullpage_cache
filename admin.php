@@ -12,15 +12,12 @@
     <?php
 
     $sitemapUrls = new FullpageCacheHelper();
-    $slugsWithGroups = $sitemapUrls->getSlugsWithGroups();
-
-
-    dd($slugsWithGroups);
+    $slugWithIds = $sitemapUrls->getSlugWithIds();
     ?>
 
     <script>
-        totalSlugs = <?php echo count($slugsWithGroups['All']); ?>;
-        slugsWithGroups = <?php echo json_encode($slugsWithGroups['All']); ?>;
+        totalSlugs = <?php echo count($slugWithIds); ?>;
+        slugWithIds = <?php echo json_encode($slugWithIds); ?>;
         nextPageIteration = 0;
         isPaused = false;
         function nextPageForCache(index) {
@@ -52,7 +49,7 @@
             var modalHtml = '';
 
             modalHtml = '<h4 class="text-center">Caching pages ' + index + ' of ' + totalSlugs + ' </h4> <br />';
-            modalHtml += '<iframe  onload="nextPageForCache('+nextPageIteration+');" src="<?php echo api_url(); ?>fullpage-cache-open-iframe?slug='+slugsWithGroups[index]+'&iteration='+nextPageIteration+'&total_slugs='+totalSlugs+'" style="border:0px;width:100%;height:500px;"></div>';
+            modalHtml += '<iframe  onload="nextPageForCache('+nextPageIteration+');" src="<?php echo api_url(); ?>fullpage-cache-open-iframe?slug='+slugWithIds[index].slug+'&id='+slugWithIds[index].id+'&iteration='+nextPageIteration+'&total_slugs='+totalSlugs+'" style="border:0px;width:100%;height:500px;"></div>';
 
             $('#js-full-page-cache-modal-body').html(modalHtml);
         }
@@ -112,12 +109,12 @@
                 <?php if ($isFullpageCached) { ?>
                 <br> <br>
                 <h1 class="text-success"><i class="mw-standalone-icons mdi mdi-emoticon-cool-outline"></i>
-                    <h4><h5 class="text-success font-weight-bold text-uppercase"> <?php echo count($slugsWithGroups['All']);?> has been full page cached</h5></h4>
+                    <h4><h5 class="text-success font-weight-bold text-uppercase"> <?php echo count($slugWithIds);?> has been full page cached</h5></h4>
                     <?php
                     } else { ?>
                         <br> <br>
                         <h1 class="text-danger"><i class="mw-standalone-icons mdi mdi-emoticon-sad-outline"></i></h1>
-                        <h5 class="text-danger font-weight-bold text-uppercase"> The <?php echo count($slugsWithGroups['All']);?> pages not cached.</h5><br/>
+                        <h5 class="text-danger font-weight-bold text-uppercase"> The <?php echo count($slugWithIds);?> pages not cached.</h5><br/>
                     <?php } ?>
                     <br>
                     <br>

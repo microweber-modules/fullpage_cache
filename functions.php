@@ -19,19 +19,18 @@ Route::name('api.')
                     }
                 }
 
-                $websiteUrl = site_url($params['slug']);
+                $contentId = intval($params['id']);
+                $contentLink = content_link($contentId);
 
-                $content = get_content('slug='.$params['slug']);
+                if ($contentLink) {
+                    $_SERVER['HTTP_REFERER'] = $contentLink;
+                    $_REQUEST['content_id'] = $contentId;
 
-                dd($content);
+                    $frontRender = new FrontendController();
+                    $html = $frontRender->index();
 
-                $_SERVER['HTTP_REFERER'] = $websiteUrl;
-                $_REQUEST['content_id'] = 2;
-
-                $frontRender = new FrontendController();
-                $html = $frontRender->index();
-
-                echo $html;
+                    echo $html;
+                }
             }
         });
 });
@@ -40,7 +39,7 @@ class FullpageCacheHelper {
 
     use SitemapHelpersTrait;
 
-    public function getSlugsWithGroups()
+    public function getSlugWithIds()
     {
         $categorySlugs = [];
         $categories = $this->fetchCategoriesLinks();
