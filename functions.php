@@ -2,18 +2,27 @@
 
 use MicroweberPackages\App\Http\Controllers\Traits\SitemapHelpersTrait;
 
-api_expose_admin('fullpage-cache-open-iframe', function ($params) {
-    if (isset($params['slug'])) {
-        if (isset($params['iteration']) && isset($params['total_slugs'])) {
-            \Cache::put('fullpage_cached_last_iteration', $params['iteration']);
-            if ($params['iteration'] >= $params['total_slugs']) {
-                \Cache::put('is_fullpage_cached', true);
-            }
-        }
+Route::name('api.')
+    ->prefix('api')
+    ->middleware(['api','admin'])
+    ->group(function () {
 
-        $pageOpen = app()->url_manager->download(site_url($params['slug']));
-        echo $pageOpen;
-    }
+        Route::get('fullpage-cache-open-iframe', function () {
+
+            $params = request()->all();
+            if (isset($params['slug'])) {
+                if (isset($params['iteration']) && isset($params['total_slugs'])) {
+                    \Cache::put('fullpage_cached_last_iteration', $params['iteration']);
+                    if ($params['iteration'] >= $params['total_slugs']) {
+                        \Cache::put('is_fullpage_cached', true);
+                    }
+                }
+
+                $websiteUrl = site_url($params['slug']);
+
+                echo $websiteUrl;
+            }
+        });
 });
 
 class FullpageCacheHelper {
