@@ -1,5 +1,6 @@
 <?php
 
+use MicroweberPackages\App\Http\Controllers\FrontendController;
 use MicroweberPackages\App\Http\Controllers\Traits\SitemapHelpersTrait;
 
 Route::name('api.')
@@ -20,7 +21,17 @@ Route::name('api.')
 
                 $websiteUrl = site_url($params['slug']);
 
-                echo $websiteUrl;
+                $content = get_content('slug='.$params['slug']);
+
+                dd($content);
+
+                $_SERVER['HTTP_REFERER'] = $websiteUrl;
+                $_REQUEST['content_id'] = 2;
+
+                $frontRender = new FrontendController();
+                $html = $frontRender->index();
+
+                echo $html;
             }
         });
 });
@@ -38,11 +49,11 @@ class FullpageCacheHelper {
                 if (isset($category['multilanguage_links'])) {
                     foreach ($category['multilanguage_links'] as $multilanguageLink) {
                         $multilanguageLink = str_replace(site_url(),'',$multilanguageLink['link']);
-                        $categorySlugs[] = $multilanguageLink;
+                        $categorySlugs[] = ['slug'=>$multilanguageLink,'id'=>$category['id']];
                     }
                 } else {
                     $originalLink = str_replace(site_url(),'', $category['original_link']);
-                    $categorySlugs[] = $originalLink;
+                    $categorySlugs[] = ['slug'=>$originalLink,'id'=>$category['id']];
                 }
             }
         }
@@ -54,11 +65,11 @@ class FullpageCacheHelper {
                 if (isset($tag['multilanguage_links'])) {
                     foreach ($tag['multilanguage_links'] as $multilanguageLink) {
                         $multilanguageLink = str_replace(site_url(),'',$multilanguageLink['link']);
-                        $tagSlugs[] = $multilanguageLink;
+                        $tagSlugs[] = ['slug'=>$multilanguageLink,'id'=>0];
                     }
                 } else {
                     $originalLink = str_replace(site_url(),'', $tag['original_link']);
-                    $tagSlugs[] = $originalLink;
+                    $tagSlugs[] = ['slug'=>$originalLink,'id'=>0];
                 }
             }
         }
@@ -70,11 +81,11 @@ class FullpageCacheHelper {
                 if (isset($post['multilanguage_links'])) {
                     foreach ($post['multilanguage_links'] as $multilanguageLink) {
                         $multilanguageLink = str_replace(site_url(),'',$multilanguageLink['link']);
-                        $postSlugs[] = $multilanguageLink;
+                        $postSlugs[] = ['slug'=>$multilanguageLink,'id'=>$post['id']];
                     }
                 } else {
                     $originalLink = str_replace(site_url(),'', $post['original_link']);
-                    $postSlugs[] = $originalLink;
+                    $postSlugs[] = ['slug'=>$originalLink,'id'=>$post['id']];
                 }
             }
         }
@@ -86,11 +97,11 @@ class FullpageCacheHelper {
                 if (isset($page['multilanguage_links'])) {
                     foreach ($page['multilanguage_links'] as $multilanguageLink) {
                         $multilanguageLink = str_replace(site_url(),'',$multilanguageLink['link']);
-                        $pageSlugs[] = $multilanguageLink;
+                        $pageSlugs[] = ['slug'=>$multilanguageLink,'id'=>$page['id']];
                     }
                 } else {
                     $originalLink = str_replace(site_url(),'', $page['original_link']);
-                    $pageSlugs[] = $originalLink;
+                    $pageSlugs[] = ['slug'=>$originalLink,'id'=>$page['id']];
                 }
             }
         }
@@ -101,13 +112,7 @@ class FullpageCacheHelper {
         $allSlugs = array_merge($allSlugs, $pageSlugs);
         $allSlugs = array_filter($allSlugs);
 
-        return [
-            'All'=>$allSlugs,
-            'Categories'=>$categorySlugs,
-            'Tags'=>$tagSlugs,
-            'Posts'=>$postSlugs,
-            'Pages'=>$pageSlugs
-        ];
+        return $allSlugs;
 
     }
 

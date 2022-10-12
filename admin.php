@@ -13,6 +13,9 @@
 
     $sitemapUrls = new FullpageCacheHelper();
     $slugsWithGroups = $sitemapUrls->getSlugsWithGroups();
+
+
+    dd($slugsWithGroups);
     ?>
 
     <script>
